@@ -23,36 +23,39 @@ import android.widget.Toast;
 public class FingerporiActivity extends Activity {
 	private static final String FINGERPORI_URL = "http://www.hs.fi/fingerpori";
 	private static final String IMAGE_URL_REGEX = "(http://www.hs.fi/kuvat/iso_webkuva/[0-9]*.gif)";
-	private static final String PREV_URL_REGEX = "(http://www.hs.fi/fingerpori/[0-9]+)";
+	private static final String PREV_URL_REGEX = "((http://www.hs.fi/fingerpori/[0-9]+)\".*>\\s*Edellinen)";
+
 	private String imageUrl;
-	private String currentUrl;
 	private String prevUrl;
 
 	public FingerporiActivity() {
-		this.currentUrl = FINGERPORI_URL;
+		readImageAndPrevUrls(FINGERPORI_URL, false);
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		readUrls();
 		loadImage();
+		// showToast("prev: " + prevUrl);
+
 		Button button = (Button) findViewById(R.id.prevButton);
 		button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (prevUrl != null) {
-					currentUrl = prevUrl;
-					readUrls();
+					readImageAndPrevUrls(prevUrl, false);
 					loadImage();
 				} else {
-					Toast.makeText(getApplicationContext(),
-							"Edellistä Fingerporia ei ole saatavilla",
-							Toast.LENGTH_SHORT).show();
+					showToast("Edellistä Fingerporia ei ole saatavilla");
 				}
 			}
+
 		});
+	}
+
+	private void showToast(String text) {
+		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
 	}
 
 	private void loadImage() {
@@ -60,21 +63,26 @@ public class FingerporiActivity extends Activity {
 		webView.loadUrl(imageUrl);
 	}
 
-	private void readUrls() {
-		imageUrl = currentUrl; // fallback to full html page
+	private void readImageAndPrevUrls(String fullHtmlUrl, boolean showToast) {
 		try {
-			StringBuilder sb = loadFullHtml();
-			imageUrl = parseImageUrl(sb.toString());
-			prevUrl = parsePrevUrl(sb.toString());
+			String fullHtml = loadFullHtml(fullHtmlUrl);
+			imageUrl = parseImageUrl(fullHtml);
+			prevUrl = parsePrevUrl(fullHtml);
+			if (showToast) {
+				// showToast("img: " + imageUrl);
+				showToast("prev: " + prevUrl);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			imageUrl = fullHtmlUrl; // fallback to full html page
+			prevUrl = null;
 		}
 	}
 
-	private StringBuilder loadFullHtml() throws IOException,
+	private String loadFullHtml(String fullHtmlUrl) throws IOException,
 			ClientProtocolException {
 		HttpClient client = new DefaultHttpClient();
-		HttpGet request = new HttpGet(currentUrl);
+		HttpGet request = new HttpGet(fullHtmlUrl);
 		HttpResponse response = client.execute(request);
 		BufferedReader rd = new BufferedReader(new InputStreamReader(response
 				.getEntity().getContent()));
@@ -83,21 +91,21 @@ public class FingerporiActivity extends Activity {
 		while ((line = rd.readLine()) != null) {
 			sb.append(line);
 		}
-		return sb;
+		return sb.toString();
 	}
 
 	private String parseImageUrl(String html) {
-		return parseUrl(html, IMAGE_URL_REGEX);
+		return parseUrl(html, IMAGE_URL_REGEX, 0);
 	}
 
 	private String parsePrevUrl(String html) {
-		return parseUrl(html, PREV_URL_REGEX);
+		return parseUrl(html, PREV_URL_REGEX, 2);
 	}
 
-	private String parseUrl(String html, String regex) {
+	private String parseUrl(String html, String regex, int group) {
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(html);
 		matcher.find();
-		return matcher.group();
+		return matcher.group(group);
 	}
 }
