@@ -2,4 +2,5 @@
 <resources>
     <string name="hello">Hello World, FingerporiActivity!</string>
     <string name="app_name">Fingerpori</string>
+    <string name="prev_button">Edellinen</string>
 </resources>
