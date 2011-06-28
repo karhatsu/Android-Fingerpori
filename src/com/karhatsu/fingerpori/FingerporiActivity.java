@@ -23,7 +23,7 @@ import android.widget.Toast;
 public class FingerporiActivity extends Activity {
 	private static final String FINGERPORI_URL = "http://www.hs.fi/fingerpori";
 	private static final String IMAGE_URL_REGEX = "(http://www.hs.fi/kuvat/iso_webkuva/[0-9]*.gif)";
-	private static final String PREV_URL_REGEX = "((http://www.hs.fi/fingerpori/[0-9]+)\".*>\\s*Edellinen)";
+	private static final String PREV_URL_REGEX = "previous.*(http://www.hs.fi/fingerpori/[0-9]+).*>\\s*Edellinen";
 
 	private String imageUrl;
 	private String prevUrl;
@@ -95,17 +95,17 @@ public class FingerporiActivity extends Activity {
 	}
 
 	private String parseImageUrl(String html) {
-		return parseUrl(html, IMAGE_URL_REGEX, 0);
+		return parseUrl(html, IMAGE_URL_REGEX);
 	}
 
 	private String parsePrevUrl(String html) {
-		return parseUrl(html, PREV_URL_REGEX, 2);
+		return parseUrl(html, PREV_URL_REGEX);
 	}
 
-	private String parseUrl(String html, String regex, int group) {
+	private String parseUrl(String html, String regex) {
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(html);
 		matcher.find();
-		return matcher.group(group);
+		return matcher.group(1);
 	}
 }
