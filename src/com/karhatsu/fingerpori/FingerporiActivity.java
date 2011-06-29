@@ -1,6 +1,7 @@
 package com.karhatsu.fingerpori;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -61,7 +62,10 @@ public class FingerporiActivity extends Activity {
 	}
 
 	private void loadImageAndDefineButtonsStatus() {
-		new LoadTask().execute();
+		ProgressDialog progressDialog = ProgressDialog.show(
+				FingerporiActivity.this, "Odota hetki",
+				"Kuvan lataus menossa...", true);
+		new LoadTask(progressDialog).execute();
 	}
 
 	private void disableButtons() {
@@ -88,6 +92,12 @@ public class FingerporiActivity extends Activity {
 	}
 
 	private class LoadTask extends AsyncTask<Void, Void, String> {
+		private final ProgressDialog progressDialog;
+
+		public LoadTask(ProgressDialog progressDialog) {
+			this.progressDialog = progressDialog;
+		}
+
 		@Override
 		protected String doInBackground(Void... params) {
 			disableButtons();
@@ -99,6 +109,7 @@ public class FingerporiActivity extends Activity {
 			WebView webView = (WebView) findViewById(R.id.webView);
 			webView.loadUrl(imageUrl);
 			disableEnableButtons();
+			progressDialog.dismiss();
 		}
 	}
 
