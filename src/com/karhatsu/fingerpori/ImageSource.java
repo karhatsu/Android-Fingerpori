@@ -2,6 +2,7 @@ package com.karhatsu.fingerpori;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,7 +11,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-public class ImageSource {
+public class ImageSource implements Serializable {
+	private static final long serialVersionUID = 1115641536089306580L;
+
 	private static final String IMAGE_URL_REGEX = "(http://www.hs.fi/kuvat/iso_webkuva/[0-9]*.(gif|jpeg))";
 	private static final String PREV_URL_REGEX = "previous.*(http://www.hs.fi/fingerpori/[0-9]+).*>\\s*Edellinen";
 

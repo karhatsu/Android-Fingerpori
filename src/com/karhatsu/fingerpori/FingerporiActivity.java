@@ -11,16 +11,27 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class FingerporiActivity extends Activity {
+	private static final String IMAGE_SOURCE_STATE_KEY = "imageSource";
 	private static final String FINGERPORI_URL = "http://www.hs.fi/fingerpori";
 	private ImageSource imageSource = new ImageSource(FINGERPORI_URL);
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if (savedInstanceState != null) {
+			imageSource = (ImageSource) savedInstanceState
+					.getSerializable(IMAGE_SOURCE_STATE_KEY);
+		}
 		setContentView(R.layout.main);
 		definePrevButton();
 		defineNextButton();
 		loadImageAndDefineButtonsStatus();
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putSerializable(IMAGE_SOURCE_STATE_KEY, imageSource);
+		super.onSaveInstanceState(outState);
 	}
 
 	private void definePrevButton() {
