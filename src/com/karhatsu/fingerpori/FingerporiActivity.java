@@ -18,7 +18,7 @@ public class FingerporiActivity extends Activity {
 		setContentView(R.layout.main);
 		definePrevButton();
 		defineNextButton();
-		loadImage();
+		loadImageAndDefineButtonsStatus();
 	}
 
 	private void definePrevButton() {
@@ -28,7 +28,7 @@ public class FingerporiActivity extends Activity {
 			public void onClick(View v) {
 				if (imageSource.getPrev() != null) {
 					imageSource = imageSource.getPrev();
-					loadImage();
+					loadImageAndDefineButtonsStatus();
 				} else {
 					showToast("Edellistä Fingerporia ei ole saatavilla");
 				}
@@ -44,7 +44,7 @@ public class FingerporiActivity extends Activity {
 			public void onClick(View v) {
 				if (imageSource.getNext() != null) {
 					imageSource = imageSource.getNext();
-					loadImage();
+					loadImageAndDefineButtonsStatus();
 				} else {
 					showToast("Seuraavaa Fingerporia ei ole saatavilla");
 				}
@@ -57,9 +57,28 @@ public class FingerporiActivity extends Activity {
 		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
 	}
 
-	private void loadImage() {
+	private void loadImageAndDefineButtonsStatus() {
 		WebView webView = (WebView) findViewById(R.id.webView);
 		webView.loadUrl(imageSource.getImageUrl());
+		disableButtons();
+	}
+
+	private void disableButtons() {
+		Button prevButton = (Button) findViewById(R.id.prevButton);
+		Button nextButton = (Button) findViewById(R.id.nextButton);
+		disableEnableButton(prevButton, imageSource.getPrev() != null,
+				getString(R.string.prev_button));
+		disableEnableButton(nextButton, imageSource.getNext() != null,
+				getString(R.string.next_button));
+	}
+
+	private void disableEnableButton(Button button, boolean enable, String text) {
+		button.setClickable(enable);
+		if (enable) {
+			button.setText(text);
+		} else {
+			button.setText("");
+		}
 	}
 
 }
