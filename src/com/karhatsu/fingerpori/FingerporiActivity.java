@@ -1,6 +1,7 @@
 package com.karhatsu.fingerpori;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -58,12 +59,15 @@ public class FingerporiActivity extends Activity {
 	}
 
 	private void loadImageAndDefineButtonsStatus() {
-		WebView webView = (WebView) findViewById(R.id.webView);
-		webView.loadUrl(imageSource.getImageUrl());
-		disableButtons();
+		new LoadTask().execute();
 	}
 
 	private void disableButtons() {
+		((Button) findViewById(R.id.prevButton)).setClickable(false);
+		((Button) findViewById(R.id.nextButton)).setClickable(false);
+	}
+
+	private void disableEnableButtons() {
 		Button prevButton = (Button) findViewById(R.id.prevButton);
 		Button nextButton = (Button) findViewById(R.id.nextButton);
 		disableEnableButton(prevButton, imageSource.getPrev() != null,
@@ -78,6 +82,21 @@ public class FingerporiActivity extends Activity {
 			button.setText(text);
 		} else {
 			button.setText("");
+		}
+	}
+
+	private class LoadTask extends AsyncTask<Void, Void, String> {
+		@Override
+		protected String doInBackground(Void... params) {
+			disableButtons();
+			return imageSource.getImageUrl();
+		}
+
+		@Override
+		protected void onPostExecute(String imageUrl) {
+			WebView webView = (WebView) findViewById(R.id.webView);
+			webView.loadUrl(imageUrl);
+			disableEnableButtons();
 		}
 	}
 
