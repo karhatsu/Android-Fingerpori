@@ -25,27 +25,26 @@ public class FingerporiActivity extends Activity {
 	private static final String IMAGE_URL_REGEX = "(http://www.hs.fi/kuvat/iso_webkuva/[0-9]*.gif)";
 	private static final String PREV_URL_REGEX = "previous.*(http://www.hs.fi/fingerpori/[0-9]+).*>\\s*Edellinen";
 
-	private String imageUrl;
 	private String prevUrl;
 
 	public FingerporiActivity() {
-		readImageAndPrevUrls(FINGERPORI_URL, false);
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-		loadImage();
-		// showToast("prev: " + prevUrl);
+		definePrevButton();
+		readUrlsAndShowImage(FINGERPORI_URL);
+	}
 
+	private void definePrevButton() {
 		Button button = (Button) findViewById(R.id.prevButton);
 		button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (prevUrl != null) {
-					readImageAndPrevUrls(prevUrl, false);
-					loadImage();
+					readUrlsAndShowImage(prevUrl);
 				} else {
 					showToast("Edellistä Fingerporia ei ole saatavilla");
 				}
@@ -54,29 +53,32 @@ public class FingerporiActivity extends Activity {
 		});
 	}
 
+	private void readUrlsAndShowImage(String htmlUrl) {
+		String imageUrl = readImageAndPrevUrls(htmlUrl);
+		loadImage(imageUrl);
+	}
+
 	private void showToast(String text) {
 		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
 	}
 
-	private void loadImage() {
+	private void loadImage(String imageUrl) {
 		WebView webView = (WebView) findViewById(R.id.webView);
 		webView.loadUrl(imageUrl);
 	}
 
-	private void readImageAndPrevUrls(String fullHtmlUrl, boolean showToast) {
+	private String readImageAndPrevUrls(String fullHtmlUrl) {
+		String imageUrl;
 		try {
 			String fullHtml = loadFullHtml(fullHtmlUrl);
 			imageUrl = parseImageUrl(fullHtml);
 			prevUrl = parsePrevUrl(fullHtml);
-			if (showToast) {
-				// showToast("img: " + imageUrl);
-				showToast("prev: " + prevUrl);
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			imageUrl = fullHtmlUrl; // fallback to full html page
 			prevUrl = null;
 		}
+		return imageUrl;
 	}
 
 	private String loadFullHtml(String fullHtmlUrl) throws IOException,
