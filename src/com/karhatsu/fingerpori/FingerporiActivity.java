@@ -12,9 +12,6 @@ public class FingerporiActivity extends Activity {
 	private static final String FINGERPORI_URL = "http://www.hs.fi/fingerpori";
 	private ImageSource imageSource = new ImageSource(FINGERPORI_URL);
 
-	public FingerporiActivity() {
-	}
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
