@@ -52,6 +52,8 @@ public class FingerporiActivity extends Activity {
 			}
 
 		});
+		button.setClickable(false);
+		button.setText("");
 	}
 
 	private void showToast(String text) {
