@@ -91,4 +91,8 @@ public class ImageSource {
 	public ImageSource getNext() {
 		return next;
 	}
+
+	public boolean isLoaded() {
+		return imageUrl != null;
+	}
 }

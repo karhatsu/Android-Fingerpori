@@ -62,9 +62,11 @@ public class FingerporiActivity extends Activity {
 	}
 
 	private void loadImageAndDefineButtonsStatus() {
-		ProgressDialog progressDialog = ProgressDialog.show(
-				FingerporiActivity.this, "Odota hetki",
-				"Kuvan lataus menossa...", true);
+		ProgressDialog progressDialog = null;
+		if (!imageSource.isLoaded()) {
+			progressDialog = ProgressDialog.show(FingerporiActivity.this,
+					"Odota hetki", "Kuvan lataus menossa...", true);
+		}
 		new LoadTask(progressDialog).execute();
 	}
 
@@ -109,7 +111,9 @@ public class FingerporiActivity extends Activity {
 			WebView webView = (WebView) findViewById(R.id.webView);
 			webView.loadUrl(imageUrl);
 			disableEnableButtons();
-			progressDialog.dismiss();
+			if (progressDialog != null) {
+				progressDialog.dismiss();
+			}
 		}
 	}
 
