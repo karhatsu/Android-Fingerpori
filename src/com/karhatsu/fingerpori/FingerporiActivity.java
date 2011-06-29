@@ -64,10 +64,14 @@ public class FingerporiActivity extends Activity {
 	private void loadImageAndDefineButtonsStatus() {
 		ProgressDialog progressDialog = null;
 		if (!imageSource.isLoaded()) {
-			progressDialog = ProgressDialog.show(FingerporiActivity.this,
-					"Odota hetki", "Kuvan lataus menossa...", true);
+			progressDialog = showProgressDialog();
 		}
 		new LoadTask(progressDialog).execute();
+	}
+
+	private ProgressDialog showProgressDialog() {
+		return ProgressDialog.show(FingerporiActivity.this, "Odota hetki",
+				"Ladataan sarjakuvaa...", true);
 	}
 
 	private void disableButtons() {
