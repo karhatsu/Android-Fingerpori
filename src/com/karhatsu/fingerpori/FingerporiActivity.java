@@ -2,7 +2,6 @@ package com.karhatsu.fingerpori;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,6 +10,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class FingerporiActivity extends Activity {
+
+	private ProgressDialog progressDialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -21,12 +22,16 @@ public class FingerporiActivity extends Activity {
 		loadImageAndDefineButtonsStatus();
 	}
 
-	private ImageSource getCurrentImageSource() {
-		return ((FingerporiApplication) getApplication()).getImageSource();
+	private FingerporiApplication getFingerporiApplication() {
+		return ((FingerporiApplication) getApplication());
+	}
+
+	ImageSource getCurrentImageSource() {
+		return getFingerporiApplication().getImageSource();
 	}
 
 	private void setCurrentImageSource(ImageSource imageSource) {
-		((FingerporiApplication) getApplication()).setImageSource(imageSource);
+		getFingerporiApplication().setImageSource(imageSource);
 	}
 
 	private void definePrevButton() {
@@ -59,8 +64,6 @@ public class FingerporiActivity extends Activity {
 				}
 			}
 		});
-		button.setClickable(false);
-		button.setText("");
 	}
 
 	private void showToast(String text) {
@@ -68,11 +71,11 @@ public class FingerporiActivity extends Activity {
 	}
 
 	private void loadImageAndDefineButtonsStatus() {
-		ProgressDialog progressDialog = null;
 		if (!getCurrentImageSource().isLoaded()) {
 			progressDialog = showProgressDialog();
 		}
-		new LoadTask(progressDialog).execute();
+		disableButtons();
+		getFingerporiApplication().startLoading(this);
 	}
 
 	private ProgressDialog showProgressDialog() {
@@ -104,28 +107,14 @@ public class FingerporiActivity extends Activity {
 		}
 	}
 
-	private class LoadTask extends AsyncTask<Void, Void, String> {
-		private final ProgressDialog progressDialog;
-
-		public LoadTask(ProgressDialog progressDialog) {
-			this.progressDialog = progressDialog;
+	void afterImageSourceLoaded(String imageUrl) {
+		WebView webView = (WebView) findViewById(R.id.webView);
+		webView.loadUrl(imageUrl);
+		disableEnableButtons();
+		if (progressDialog != null) {
+			progressDialog.dismiss();
 		}
-
-		@Override
-		protected String doInBackground(Void... params) {
-			disableButtons();
-			return getCurrentImageSource().getImageUrl();
-		}
-
-		@Override
-		protected void onPostExecute(String imageUrl) {
-			WebView webView = (WebView) findViewById(R.id.webView);
-			webView.loadUrl(imageUrl);
-			disableEnableButtons();
-			if (progressDialog != null) {
-				progressDialog.dismiss();
-			}
-		}
+		getFingerporiApplication().loadingDone();
 	}
 
 }
