@@ -11,27 +11,22 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class FingerporiActivity extends Activity {
-	private static final String IMAGE_SOURCE_STATE_KEY = "imageSource";
-	private static final String FINGERPORI_URL = "http://www.hs.fi/fingerpori";
-	private ImageSource imageSource = new ImageSource(FINGERPORI_URL);
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (savedInstanceState != null) {
-			imageSource = (ImageSource) savedInstanceState
-					.getSerializable(IMAGE_SOURCE_STATE_KEY);
-		}
 		setContentView(R.layout.main);
 		definePrevButton();
 		defineNextButton();
 		loadImageAndDefineButtonsStatus();
 	}
 
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		outState.putSerializable(IMAGE_SOURCE_STATE_KEY, imageSource);
-		super.onSaveInstanceState(outState);
+	private ImageSource getCurrentImageSource() {
+		return ((FingerporiApplication) getApplication()).getImageSource();
+	}
+
+	private void setCurrentImageSource(ImageSource imageSource) {
+		((FingerporiApplication) getApplication()).setImageSource(imageSource);
 	}
 
 	private void definePrevButton() {
@@ -39,14 +34,14 @@ public class FingerporiActivity extends Activity {
 		button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				ImageSource imageSource = getCurrentImageSource();
 				if (imageSource.getPrev() != null) {
-					imageSource = imageSource.getPrev();
+					setCurrentImageSource(imageSource.getPrev());
 					loadImageAndDefineButtonsStatus();
 				} else {
 					showToast("Edellistä Fingerporia ei ole saatavilla");
 				}
 			}
-
 		});
 	}
 
@@ -55,14 +50,14 @@ public class FingerporiActivity extends Activity {
 		button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				ImageSource imageSource = getCurrentImageSource();
 				if (imageSource.getNext() != null) {
-					imageSource = imageSource.getNext();
+					setCurrentImageSource(imageSource.getNext());
 					loadImageAndDefineButtonsStatus();
 				} else {
 					showToast("Seuraavaa Fingerporia ei ole saatavilla");
 				}
 			}
-
 		});
 		button.setClickable(false);
 		button.setText("");
@@ -74,7 +69,7 @@ public class FingerporiActivity extends Activity {
 
 	private void loadImageAndDefineButtonsStatus() {
 		ProgressDialog progressDialog = null;
-		if (!imageSource.isLoaded()) {
+		if (!getCurrentImageSource().isLoaded()) {
 			progressDialog = showProgressDialog();
 		}
 		new LoadTask(progressDialog).execute();
@@ -93,6 +88,7 @@ public class FingerporiActivity extends Activity {
 	private void disableEnableButtons() {
 		Button prevButton = (Button) findViewById(R.id.prevButton);
 		Button nextButton = (Button) findViewById(R.id.nextButton);
+		ImageSource imageSource = getCurrentImageSource();
 		disableEnableButton(prevButton, imageSource.getPrev() != null,
 				getString(R.string.prev_button));
 		disableEnableButton(nextButton, imageSource.getNext() != null,
@@ -118,7 +114,7 @@ public class FingerporiActivity extends Activity {
 		@Override
 		protected String doInBackground(Void... params) {
 			disableButtons();
-			return imageSource.getImageUrl();
+			return getCurrentImageSource().getImageUrl();
 		}
 
 		@Override
