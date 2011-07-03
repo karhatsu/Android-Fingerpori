@@ -16,6 +16,7 @@ public class FingerporiActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getFingerporiApplication().setActivity(this);
 		setContentView(R.layout.main);
 		definePrevButton();
 		defineNextButton();
@@ -26,7 +27,7 @@ public class FingerporiActivity extends Activity {
 		return ((FingerporiApplication) getApplication());
 	}
 
-	ImageSource getCurrentImageSource() {
+	private ImageSource getCurrentImageSource() {
 		return getFingerporiApplication().getImageSource();
 	}
 

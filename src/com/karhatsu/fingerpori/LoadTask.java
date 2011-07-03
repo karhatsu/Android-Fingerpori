@@ -3,19 +3,19 @@ package com.karhatsu.fingerpori;
 import android.os.AsyncTask;
 
 public class LoadTask extends AsyncTask<Void, Void, String> {
-	private final FingerporiActivity fingerporiActivity;
+	private final FingerporiApplication fingerporiApplication;
 
-	public LoadTask(FingerporiActivity fingerporiActivity) {
-		this.fingerporiActivity = fingerporiActivity;
+	public LoadTask(FingerporiApplication fingerporiApplication) {
+		this.fingerporiApplication = fingerporiApplication;
 	}
 
 	@Override
 	protected String doInBackground(Void... params) {
-		return fingerporiActivity.getCurrentImageSource().getImageUrl();
+		return fingerporiApplication.getImageSource().getImageUrl();
 	}
 
 	@Override
 	protected void onPostExecute(String imageUrl) {
-		fingerporiActivity.afterImageSourceLoaded(imageUrl);
+		fingerporiApplication.afterImageSourceLoaded(imageUrl);
 	}
 }
