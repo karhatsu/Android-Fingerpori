@@ -28,12 +28,9 @@ public class FingerporiApplication extends Application {
 		this.imageSource = imageSource;
 	}
 
-	public void loadingDone() {
-		loadTask = null;
-	}
-
 	public void afterImageSourceLoaded(String imageUrl) {
 		activity.afterImageSourceLoaded(imageUrl);
+		loadTask = null;
 	}
 
 	public void setActivity(FingerporiActivity activity) {

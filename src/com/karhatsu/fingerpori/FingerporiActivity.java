@@ -115,7 +115,6 @@ public class FingerporiActivity extends Activity {
 		if (progressDialog != null) {
 			progressDialog.dismiss();
 		}
-		getFingerporiApplication().loadingDone();
 	}
 
 }
