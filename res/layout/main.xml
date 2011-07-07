@@ -11,7 +11,7 @@
 			android:layout_weight="1" android:layout_height="wrap_content"
 			android:text="@string/next_button" />
 	</LinearLayout>
-	<WebView android:layout_width="fill_parent"
-		android:layout_height="fill_parent" android:id="@+id/webView"
+	<WebView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/webView"
 		android:scrollbars="vertical" />
 </LinearLayout>
