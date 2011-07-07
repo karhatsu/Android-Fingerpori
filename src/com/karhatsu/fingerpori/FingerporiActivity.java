@@ -110,6 +110,7 @@ public class FingerporiActivity extends Activity {
 
 	void afterImageSourceLoaded(String imageUrl) {
 		WebView webView = (WebView) findViewById(R.id.webView);
+		webView.getSettings().setBuiltInZoomControls(true);
 		webView.loadUrl(imageUrl);
 		disableEnableButtons();
 		if (progressDialog != null) {
