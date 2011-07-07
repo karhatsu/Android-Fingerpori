@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -18,9 +19,23 @@ public class FingerporiActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		getFingerporiApplication().setActivity(this);
 		setContentView(R.layout.main);
+		defineWebView();
 		definePrevButton();
 		defineNextButton();
 		loadImageAndDefineButtonsStatus();
+	}
+
+	private void defineWebView() {
+		WebView webView = (WebView) findViewById(R.id.webView);
+		webView.setWebViewClient(new WebViewClient() {
+			@Override
+			public void onPageFinished(WebView view, String url) {
+				if (progressDialog != null) {
+					progressDialog.dismiss();
+				}
+			}
+		});
+		webView.getSettings().setBuiltInZoomControls(true);
 	}
 
 	private FingerporiApplication getFingerporiApplication() {
@@ -110,12 +125,8 @@ public class FingerporiActivity extends Activity {
 
 	void afterImageSourceLoaded(String imageUrl) {
 		WebView webView = (WebView) findViewById(R.id.webView);
-		webView.getSettings().setBuiltInZoomControls(true);
 		webView.loadUrl(imageUrl);
 		disableEnableButtons();
-		if (progressDialog != null) {
-			progressDialog.dismiss();
-		}
 	}
 
 }
