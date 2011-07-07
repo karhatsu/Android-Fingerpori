@@ -2,6 +2,7 @@ package com.karhatsu.fingerpori;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,6 +29,13 @@ public class FingerporiActivity extends Activity {
 	private void defineWebView() {
 		WebView webView = (WebView) findViewById(R.id.webView);
 		webView.setWebViewClient(new WebViewClient() {
+			@Override
+			public void onPageStarted(WebView view, String url, Bitmap favicon) {
+				if (progressDialog != null) {
+					progressDialog.setMessage("Ladataan sarjakuvaa...");
+				}
+			}
+
 			@Override
 			public void onPageFinished(WebView view, String url) {
 				if (progressDialog != null) {
@@ -96,7 +104,7 @@ public class FingerporiActivity extends Activity {
 
 	private ProgressDialog showProgressDialog() {
 		return ProgressDialog.show(FingerporiActivity.this, "Odota hetki",
-				"Ladataan sarjakuvaa...", true);
+				"Haetaan sarjakuvan osoitetta...", true);
 	}
 
 	private void disableButtons() {
