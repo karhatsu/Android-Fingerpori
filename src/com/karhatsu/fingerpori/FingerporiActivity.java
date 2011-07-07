@@ -32,6 +32,7 @@ public class FingerporiActivity extends Activity {
 			@Override
 			public void onPageStarted(WebView view, String url, Bitmap favicon) {
 				if (progressDialog != null) {
+					progressDialog.setProgress(90);
 					progressDialog.setMessage("Ladataan sarjakuvaa...");
 				}
 			}
@@ -103,8 +104,13 @@ public class FingerporiActivity extends Activity {
 	}
 
 	private ProgressDialog showProgressDialog() {
-		return ProgressDialog.show(FingerporiActivity.this, "Odota hetki",
-				"Haetaan sarjakuvan osoitetta...", true);
+		ProgressDialog dialog = new ProgressDialog(FingerporiActivity.this);
+		dialog.setTitle("Odota hetki");
+		dialog.setMessage("Haetaan sarjakuvan osoitetta...");
+		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		dialog.show();
+		dialog.setProgress(10);
+		return dialog;
 	}
 
 	private void disableButtons() {
@@ -132,6 +138,7 @@ public class FingerporiActivity extends Activity {
 	}
 
 	void afterImageSourceLoaded(String imageUrl) {
+		progressDialog.setProgress(80);
 		WebView webView = (WebView) findViewById(R.id.webView);
 		webView.loadUrl(imageUrl);
 		disableEnableButtons();
