@@ -138,7 +138,9 @@ public class FingerporiActivity extends Activity {
 	}
 
 	void afterImageSourceLoaded(String imageUrl) {
-		progressDialog.setProgress(80);
+		if (progressDialog != null) {
+			progressDialog.setProgress(80);
+		}
 		WebView webView = (WebView) findViewById(R.id.webView);
 		webView.loadUrl(imageUrl);
 		disableEnableButtons();
