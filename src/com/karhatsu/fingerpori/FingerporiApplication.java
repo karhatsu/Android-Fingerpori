@@ -1,6 +1,7 @@
 package com.karhatsu.fingerpori;
 
 import android.app.Application;
+import android.app.ProgressDialog;
 
 public class FingerporiApplication extends Application {
 
@@ -13,9 +14,10 @@ public class FingerporiApplication extends Application {
 		imageSource = new ImageSource(FINGERPORI_URL);
 	}
 
-	public void startLoading(FingerporiActivity fingerporiActivity) {
+	public void startLoading(FingerporiActivity fingerporiActivity,
+			ProgressDialog progressDialog) {
 		if (loadTask == null) {
-			loadTask = new LoadTask(this);
+			loadTask = new LoadTask(this, progressDialog);
 			loadTask.execute();
 		}
 	}

@@ -11,6 +11,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.app.ProgressDialog;
+
 public class ImageSource implements Serializable {
 	private static final long serialVersionUID = 1115641536089306580L;
 
@@ -21,6 +23,8 @@ public class ImageSource implements Serializable {
 	private String imageUrl;
 	private ImageSource next;
 	private ImageSource prev;
+
+	private ProgressDialog progressDialog;
 
 	public ImageSource(String htmlUrl) {
 		this.fullHtmlUrl = htmlUrl;
@@ -46,10 +50,16 @@ public class ImageSource implements Serializable {
 		}
 		try {
 			imageUrl = parseImageUrl(fullHtml);
+			if (progressDialog != null) {
+				progressDialog.incrementProgressBy(5);
+			}
 		} catch (Exception e) {
 		}
 		try {
 			prev = new ImageSource(parsePrevUrl(fullHtml), this);
+			if (progressDialog != null) {
+				progressDialog.incrementProgressBy(5);
+			}
 		} catch (Exception e) {
 		}
 	}
@@ -63,8 +73,13 @@ public class ImageSource implements Serializable {
 					response.getEntity().getContent()));
 			String line = "";
 			StringBuilder sb = new StringBuilder();
+			int lineCount = 0;
 			while ((line = rd.readLine()) != null) {
 				sb.append(line);
+				if (lineCount % 50 == 0 && progressDialog != null) {
+					progressDialog.incrementProgressBy(1);
+				}
+				lineCount++;
 			}
 			return sb.toString();
 		} catch (Exception e) {
@@ -97,5 +112,9 @@ public class ImageSource implements Serializable {
 
 	public boolean isLoaded() {
 		return imageUrl != null;
+	}
+
+	public void setProgressDialog(ProgressDialog progressDialog) {
+		this.progressDialog = progressDialog;
 	}
 }

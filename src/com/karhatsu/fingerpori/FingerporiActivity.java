@@ -100,7 +100,7 @@ public class FingerporiActivity extends Activity {
 			progressDialog = showProgressDialog();
 		}
 		disableButtons();
-		getFingerporiApplication().startLoading(this);
+		getFingerporiApplication().startLoading(this, progressDialog);
 	}
 
 	private ProgressDialog showProgressDialog() {
@@ -109,7 +109,7 @@ public class FingerporiActivity extends Activity {
 		dialog.setMessage("Haetaan sarjakuvan osoitetta...");
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		dialog.show();
-		dialog.setProgress(10);
+		dialog.setProgress(5);
 		return dialog;
 	}
 
@@ -140,6 +140,7 @@ public class FingerporiActivity extends Activity {
 	void afterImageSourceLoaded(String imageUrl) {
 		if (progressDialog != null) {
 			progressDialog.setProgress(80);
+			progressDialog.setMessage("Valmistellaan sarjakuvan latausta...");
 		}
 		WebView webView = (WebView) findViewById(R.id.webView);
 		webView.loadUrl(imageUrl);
