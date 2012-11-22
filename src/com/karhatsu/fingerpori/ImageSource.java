@@ -17,7 +17,7 @@ public class ImageSource implements Serializable {
 	private static final long serialVersionUID = 1115641536089306580L;
 
 	private static final String IMAGE_URL_REGEX = "(http://hs[0-9]*.\\.snstatic\\.fi/webkuva/sarjis/560/[0-9]+)";
-	private static final String PREV_URL_REGEX = "prev-cm.*href=\"(/fingerpori/[0-9s]+).*\">";
+	private static final String PREV_URL_REGEX = "prev-cm \" title=\"Edellinen\" href=\"(/fingerpori/[0-9s]+)\">";
 
 	private static final String HS_URL = "http://www.hs.fi";
 
