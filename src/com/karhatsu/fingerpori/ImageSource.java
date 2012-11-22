@@ -16,8 +16,10 @@ import android.app.ProgressDialog;
 public class ImageSource implements Serializable {
 	private static final long serialVersionUID = 1115641536089306580L;
 
-	private static final String IMAGE_URL_REGEX = "(http://www.hs.fi/kuvat/iso_webkuva/[0-9]*.(gif|jpeg))";
-	private static final String PREV_URL_REGEX = "previous.*(http://www.hs.fi/fingerpori/[0-9]+).*>\\s*Edellinen";
+	private static final String IMAGE_URL_REGEX = "(http://hs[0-9]*.\\.snstatic\\.fi/webkuva/sarjis/560/[0-9]+)";
+	private static final String PREV_URL_REGEX = "prev-cm.*href=\"(/fingerpori/[0-9s]+).*\">";
+
+	private static final String HS_URL = "http://www.hs.fi";
 
 	private String fullHtmlUrl;
 	private String imageUrl;
@@ -92,7 +94,7 @@ public class ImageSource implements Serializable {
 	}
 
 	private String parsePrevUrl(String html) {
-		return parseUrl(html, PREV_URL_REGEX);
+		return HS_URL + parseUrl(html, PREV_URL_REGEX);
 	}
 
 	private String parseUrl(String html, String regex) {
