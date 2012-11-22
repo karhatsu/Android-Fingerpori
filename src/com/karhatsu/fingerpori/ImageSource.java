@@ -78,7 +78,7 @@ public class ImageSource implements Serializable {
 			int lineCount = 0;
 			while ((line = rd.readLine()) != null) {
 				sb.append(line);
-				if (lineCount % 50 == 0 && progressDialog != null) {
+				if (lineCount % 100 == 0 && progressDialog != null) {
 					progressDialog.incrementProgressBy(1);
 				}
 				lineCount++;
