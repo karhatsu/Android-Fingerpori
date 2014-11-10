@@ -11,13 +11,19 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 public class FingerporiActivity extends Activity {
 
 	private ProgressDialog progressDialog;
+    private Calendar ilDate;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        ilDate = new GregorianCalendar();
 		getFingerporiApplication().setActivity(this);
 		setContentView(R.layout.main);
 		defineWebViewHS();
@@ -51,7 +57,7 @@ public class FingerporiActivity extends Activity {
     private void defineWebViewIL() {
         WebView webView = (WebView) findViewById(R.id.webViewIL);
         webView.getSettings().setBuiltInZoomControls(true);
-        webView.loadUrl("http://static.iltalehti.fi/sarjakuvat/Fingerpori_20141107.gif");
+        loadILImage();
     }
 
 	private FingerporiApplication getFingerporiApplication() {
@@ -71,6 +77,8 @@ public class FingerporiActivity extends Activity {
 		button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+                ilDate.add(Calendar.DAY_OF_YEAR, -1);
+                loadILImage();
 				ImageSource imageSource = getCurrentImageSource();
 				if (imageSource.getPrev() != null) {
 					setCurrentImageSource(imageSource.getPrev());
@@ -87,6 +95,8 @@ public class FingerporiActivity extends Activity {
 		button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+                ilDate.add(Calendar.DAY_OF_YEAR, +1);
+                loadILImage();
 				ImageSource imageSource = getCurrentImageSource();
 				if (imageSource.getNext() != null) {
 					setCurrentImageSource(imageSource.getNext());
@@ -147,11 +157,17 @@ public class FingerporiActivity extends Activity {
 	void afterImageSourceLoaded(String imageUrl) {
 		if (progressDialog != null) {
 			progressDialog.setProgress(80);
-			progressDialog.setMessage("Valmistellaan sarjakuvan latausta...");
+			progressDialog.setMessage("Valmistellaan HS-sarjakuvan latausta...");
 		}
 		WebView webView = (WebView) findViewById(R.id.webViewHS);
 		webView.loadUrl(imageUrl);
 		disableEnableButtons();
 	}
+
+    private void loadILImage() {
+        String date = new SimpleDateFormat("yyyyMMdd").format(ilDate.getTime());
+        WebView webView = (WebView) findViewById(R.id.webViewIL);
+        webView.loadUrl("http://static.iltalehti.fi/sarjakuvat/Fingerpori_" + date + ".gif");
+    }
 
 }
