@@ -84,7 +84,7 @@ public class FingerporiActivity extends Activity {
 					setCurrentImageSource(imageSource.getPrev());
 					loadImageAndDefineButtonsStatus();
 				} else {
-					showToast("Edellistä Fingerporia ei ole saatavilla");
+					showToast("Edellistä HS-Fingerporia ei ole saatavilla");
 				}
 			}
 		});
@@ -102,7 +102,7 @@ public class FingerporiActivity extends Activity {
 					setCurrentImageSource(imageSource.getNext());
 					loadImageAndDefineButtonsStatus();
 				} else {
-					showToast("Seuraavaa Fingerporia ei ole saatavilla");
+					showToast("Seuraavaa HS-Fingerporia ei ole saatavilla");
 				}
 			}
 		});
@@ -123,7 +123,7 @@ public class FingerporiActivity extends Activity {
 	private ProgressDialog showProgressDialog() {
 		ProgressDialog dialog = new ProgressDialog(FingerporiActivity.this);
 		dialog.setTitle("Odota hetki");
-		dialog.setMessage("Haetaan sarjakuvan osoitetta...");
+		dialog.setMessage("Haetaan HS-sarjakuvan osoitetta...");
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		dialog.show();
 		dialog.setProgress(5);
