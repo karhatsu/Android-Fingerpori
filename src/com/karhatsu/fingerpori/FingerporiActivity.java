@@ -20,14 +20,15 @@ public class FingerporiActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		getFingerporiApplication().setActivity(this);
 		setContentView(R.layout.main);
-		defineWebView();
+		defineWebViewHS();
+        defineWebViewIL();
 		definePrevButton();
 		defineNextButton();
 		loadImageAndDefineButtonsStatus();
 	}
 
-	private void defineWebView() {
-		WebView webView = (WebView) findViewById(R.id.webView);
+	private void defineWebViewHS() {
+		WebView webView = (WebView) findViewById(R.id.webViewHS);
 		webView.setWebViewClient(new WebViewClient() {
 			@Override
 			public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -46,6 +47,12 @@ public class FingerporiActivity extends Activity {
 		});
 		webView.getSettings().setBuiltInZoomControls(true);
 	}
+
+    private void defineWebViewIL() {
+        WebView webView = (WebView) findViewById(R.id.webViewIL);
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.loadUrl("http://static.iltalehti.fi/sarjakuvat/Fingerpori_20141107.gif");
+    }
 
 	private FingerporiApplication getFingerporiApplication() {
 		return ((FingerporiApplication) getApplication());
@@ -142,7 +149,7 @@ public class FingerporiActivity extends Activity {
 			progressDialog.setProgress(80);
 			progressDialog.setMessage("Valmistellaan sarjakuvan latausta...");
 		}
-		WebView webView = (WebView) findViewById(R.id.webView);
+		WebView webView = (WebView) findViewById(R.id.webViewHS);
 		webView.loadUrl(imageUrl);
 		disableEnableButtons();
 	}

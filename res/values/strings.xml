@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, FingerporiActivity!</string>
     <string name="app_name">Fingerpori</string>
     <string name="prev_button">Edellinen</string>
     <string name="next_button">Seuraava</string>
+    <string name="hs">HS</string>
+    <string name="il">IL</string>
 </resources>
