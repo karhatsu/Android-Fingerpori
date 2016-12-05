@@ -12,13 +12,13 @@
 			android:text="@string/next_button" />
 	</LinearLayout>
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="@string/hs" android:textSize="20dp"/>
-	<WebView android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:id="@+id/webViewHS"
-		android:scrollbars="vertical" />
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="@string/il" android:textSize="20dp" android:layout_marginTop="10dp"/>
     <WebView android:layout_width="wrap_content"
              android:layout_height="wrap_content" android:id="@+id/webViewIL"
              android:scrollbars="vertical" />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/hs" android:textSize="20dp"/>
+	<WebView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/webViewHS"
+		android:scrollbars="vertical" />
 </LinearLayout>
