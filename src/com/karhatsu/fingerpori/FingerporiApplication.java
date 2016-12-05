@@ -14,10 +14,9 @@ public class FingerporiApplication extends Application {
 		imageSource = new ImageSource(FINGERPORI_URL);
 	}
 
-	public void startLoading(FingerporiActivity fingerporiActivity,
-			ProgressDialog progressDialog) {
+	public void startLoading(FingerporiActivity fingerporiActivity, ProgressDialog progressDialog, boolean firstLoad) {
 		if (loadTask == null) {
-			loadTask = new LoadTask(this, progressDialog);
+			loadTask = new LoadTask(this, progressDialog, firstLoad);
 			loadTask.execute();
 		}
 	}

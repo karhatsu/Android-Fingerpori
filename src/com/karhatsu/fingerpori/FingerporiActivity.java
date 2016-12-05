@@ -30,7 +30,7 @@ public class FingerporiActivity extends Activity {
         defineWebViewIL();
 		definePrevButton();
 		defineNextButton();
-		loadImageAndDefineButtonsStatus();
+		loadImageAndDefineButtonsStatus(true);
 	}
 
 	private void defineWebViewHS() {
@@ -82,7 +82,7 @@ public class FingerporiActivity extends Activity {
 				ImageSource imageSource = getCurrentImageSource();
 				if (imageSource.getPrev() != null) {
 					setCurrentImageSource(imageSource.getPrev());
-					loadImageAndDefineButtonsStatus();
+					loadImageAndDefineButtonsStatus(false);
 				} else {
 					showToast("Edellistä HS-Fingerporia ei ole saatavilla");
 				}
@@ -100,7 +100,7 @@ public class FingerporiActivity extends Activity {
 				ImageSource imageSource = getCurrentImageSource();
 				if (imageSource.getNext() != null) {
 					setCurrentImageSource(imageSource.getNext());
-					loadImageAndDefineButtonsStatus();
+					loadImageAndDefineButtonsStatus(false);
 				} else {
 					showToast("Seuraavaa HS-Fingerporia ei ole saatavilla");
 				}
@@ -112,12 +112,12 @@ public class FingerporiActivity extends Activity {
 		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
 	}
 
-	private void loadImageAndDefineButtonsStatus() {
+	private void loadImageAndDefineButtonsStatus(boolean firstLoad) {
 		if (!getCurrentImageSource().isLoaded()) {
 			progressDialog = showProgressDialog();
 		}
 		disableButtons();
-		getFingerporiApplication().startLoading(this, progressDialog);
+		getFingerporiApplication().startLoading(this, progressDialog, firstLoad);
 	}
 
 	private ProgressDialog showProgressDialog() {

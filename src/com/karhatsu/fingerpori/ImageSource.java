@@ -11,9 +11,9 @@ import java.util.regex.Pattern;
 public class ImageSource implements Serializable {
 	private static final long serialVersionUID = 1115641536089306580L;
 
-	private static final String IMAGE_URL_REGEX = "(http://www\\.hs\\.fi/webkuva/sarjis/560/[0-9]+)";
-	private static final String PREV_URL_REGEX = "prev-cm \" title=\"Edellinen\" href=\"(/fingerpori/[0-9s]+)\">";
-
+	private static final String FIRST_COMICS_PAGE_REGEX = "href=\"(/fingerpori/car-[0-9]+.html)\"";
+	private static final String IMAGE_URL_REGEX = "(//hs.mediadelivery.io/img/1920/[a-f0-9]+.(png|jpg))";
+	private static final String PREV_URL_REGEX = "<a class=\"article-navlink prev \" href=\"(/fingerpori/car-[0-9]+.html)\">";
 	private static final String HS_URL = "http://www.hs.fi";
 
 	private String fullHtmlUrl;
@@ -32,18 +32,23 @@ public class ImageSource implements Serializable {
 		this.next = next;
 	}
 
-	public String getImageUrl() {
+	public String getImageUrl(boolean firstLoad) {
 		if (imageUrl == null) {
-			readImageUrlAndCreatePrevSources();
+			readImageUrlAndCreatePrevSources(firstLoad);
 		}
 		return imageUrl;
 	}
 
-	private void readImageUrlAndCreatePrevSources() {
+	private void readImageUrlAndCreatePrevSources(boolean firstLoad) {
 		String fullHtml = loadFullHtml(fullHtmlUrl);
 		imageUrl = fullHtmlUrl; // fallback to full html page
 		if (fullHtml == null) {
 			return;
+		}
+		if (firstLoad) {
+			String firstComicsUrl = parseUrl(fullHtml, FIRST_COMICS_PAGE_REGEX);
+			fullHtml = loadFullHtml(HS_URL + firstComicsUrl);
+			imageUrl = fullHtmlUrl; // fallback to full html page
 		}
 		try {
 			imageUrl = parseImageUrl(fullHtml);
@@ -63,15 +68,15 @@ public class ImageSource implements Serializable {
 
 	private String loadFullHtml(String fullHtmlUrl) {
 		try {
-            URL url = new URL(fullHtmlUrl);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
-            String line;
+			URL url = new URL(fullHtmlUrl);
+			HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+			InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String line;
 			StringBuilder sb = new StringBuilder();
 			int lineCount = 0;
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
+			while ((line = br.readLine()) != null) {
+				sb.append(line);
 				if (lineCount % 100 == 0 && progressDialog != null) {
 					progressDialog.incrementProgressBy(1);
 				}
@@ -84,7 +89,7 @@ public class ImageSource implements Serializable {
 	}
 
 	private String parseImageUrl(String html) {
-		return parseUrl(html, IMAGE_URL_REGEX);
+		return "http://" + parseUrl(html, IMAGE_URL_REGEX);
 	}
 
 	private String parsePrevUrl(String html) {
