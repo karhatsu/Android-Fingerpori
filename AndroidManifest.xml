@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.karhatsu.fingerpori" android:versionCode="5" android:versionName="5">
-	<uses-sdk android:minSdkVersion="21" />
+	package="com.karhatsu.fingerpori" android:versionCode="6" android:versionName="6">
+	<uses-sdk android:minSdkVersion="22" />
 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
 	<application android:icon="@drawable/icon" android:label="@string/app_name"
